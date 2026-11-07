@@ -1,8 +1,9 @@
 from datetime import datetime, timezone
+from decimal import Decimal
 from enum import StrEnum
 
-from sqlalchemy import DateTime, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import DateTime, ForeignKey, Numeric, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -38,6 +39,7 @@ class SpendCategory(Base):
         default=utc_now,
         onupdate=utc_now,
     )
+    spends: Mapped[list["Spend"]] = relationship(back_populates="category")
 
     @property
     def is_deleted(self) -> bool:
@@ -46,3 +48,28 @@ class SpendCategory(Base):
     def soft_delete(self) -> None:
         self.status = CategoryStatus.DELETED
         self.updated_at = utc_now()
+
+
+class Spend(Base):
+    __tablename__ = "spends"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    label: Mapped[str] = mapped_column(String(255), nullable=False)
+    amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    category_id: Mapped[int] = mapped_column(
+        ForeignKey("spend_categories.id"),
+        nullable=False,
+        index=True,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=utc_now,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=utc_now,
+        onupdate=utc_now,
+    )
+    category: Mapped["SpendCategory"] = relationship(back_populates="spends")
