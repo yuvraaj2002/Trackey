@@ -1,0 +1,44 @@
+:root {
+  color-scheme: light;
+
+  --bg: #fbf9f4;
+  --surface: #fffefb;
+  --surface-sunken: #f5f2ea;
+  --sidebar: #f3efe6;
+  --hover: #ece7db;
+  --fg: #2a2722;
+  --muted: #655f55;
+  --subtle: #7a7468;
+  --border: #e5e0d4;
+  --border-strong: #c9c3b5;
+  --accent: #2f6b66;
+  --accent-hover: #275955;
+  --accent-fg: #ffffff;
+  --accent-soft: #e3eeeb;
+  --accent-soft-fg: #235450;
+  --danger: #a3372b;
+  --danger-hover: #8b2d23;
+  --danger-soft: #f8e9e5;
+  --danger-soft-fg: #80281e;
+  --overlay: rgb(42 39 34 / 0.32);
+  --shadow-color: rgb(60 50 30 / 0.12);
+
+  --font-display: "Fraunces Variable", Georgia, serif;
+  --font-ui:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+
+  --radius-control: 8px;
+  --radius-panel: 12px;
+  --shadow-popover: 0 8px 28px var(--shadow-color);
+
+  --sidebar-width: 220px;
+  --content-max: none;
+  --section-gap: 40px;
+
+  /* Motion (taste-skill hover layer) */
+  --m-in: 140ms;
+  --m-out: 200ms;
+  --m-press: 90ms;
+  --m-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}

@@ -1,34 +1,50 @@
 # Trackey
 
-Basic FastAPI app backed by a local SQLite database via SQLAlchemy ORM.
+Personal spend tracker — FastAPI + SQLite backend and a React UI.
 
 ## Stack
 
-- Python 3.12
-- FastAPI + Uvicorn
-- SQLAlchemy 2.x
-- Alembic
-- SQLite (`data/trackey.db`)
+- Python 3.12 · FastAPI · SQLAlchemy 2 · Alembic · SQLite (`data/trackey.db`)
+- React · Vite · TypeScript (`ui/`)
 
 ## Setup
 
 ```bash
 uv sync
-uv add alembic   # if not already present
 uv run alembic upgrade head
-uv run uvicorn app.main:app --reload
+
+# Fill ~6 months of realistic local data (wipe first with --reset)
+uv run python scripts/seed_dev.py --reset
+
+# API
+uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+
+# UI
+cd ui && npm install && npm run dev
 ```
 
-API docs: http://127.0.0.1:8000/docs
+- API docs: http://127.0.0.1:8000/docs  
+- UI: http://127.0.0.1:5173  
+- Design system: [`design.md`](design.md)  
+- Postman: [`postman/Trackey.postman_collection.json`](postman/Trackey.postman_collection.json)
 
-## Endpoints
+### Seed options
+
+```bash
+uv run python scripts/seed_dev.py              # append-friendly (creates missing categories)
+uv run python scripts/seed_dev.py --reset      # clear categories + spends, then seed
+uv run python scripts/seed_dev.py --months 6   # history depth (default 6)
+uv run python scripts/seed_dev.py --seed 42    # reproducible RNG
+```
+
+## API
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/health` | App/server health |
-| GET | `/health/db` | Database connectivity check |
-| GET | `/spend-categories` | List active spend categories |
-| POST | `/spend-categories` | Create a category (`{"name": "..."}`) |
-| DELETE | `/spend-categories/{id}` | Soft-delete a category |
-
-Soft delete sets `status` to `deleted` instead of removing the row.
+| GET | `/health` | App health |
+| GET | `/health/db` | Database check |
+| GET/POST | `/spend-categories` | List / create |
+| DELETE | `/spend-categories/{id}` | Soft-delete |
+| GET/POST | `/spends` | List (cursor + `category_id`) / create |
+| PUT/DELETE | `/spends/{id}` | Update label/amount / hard-delete |
+| GET | `/analytics` | Period summary (`start`, `end`, `top_limit`) |

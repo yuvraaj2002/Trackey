@@ -33,3 +33,11 @@ data/*.db-*
 .idea/
 .vscode/
 Untitled/
+
+# Agent skill installs (reinstall via skills-lock.json)
+.agents/
+.cursor/
+
+# Frontend
+ui/node_modules/
+ui/dist/
