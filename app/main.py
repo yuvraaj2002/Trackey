@@ -9,12 +9,20 @@ from app.routers import (
 )
 
 app = FastAPI(title="Trackey", version="0.1.0")
+# Local-only API: allow browser Vite + Tauri webview origins.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://127.0.0.1:5173",
         "http://localhost:5173",
+        "tauri://localhost",
+        "https://tauri.localhost",
+        "http://tauri.localhost",
+        "asset://localhost",
+        "https://asset.localhost",
+        "http://asset.localhost",
     ],
+    allow_origin_regex=r"^(https?://(localhost|127\.0\.0\.1|tauri\.localhost|asset\.localhost)(:\d+)?|tauri://localhost|asset://localhost)$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { FolderOpen, LayoutDashboard, Receipt, ShieldCheck } from "lucide-react";
+import { FolderOpen, LayoutDashboard, Moon, Receipt, ShieldCheck, Sun } from "lucide-react";
 import { api } from "../api/client";
+import { getStoredTheme, toggleTheme, type Theme } from "../lib/theme";
 
 type ConnectionState = "checking" | "ok" | "bad";
 
@@ -17,9 +18,12 @@ const understandNav = [
 export function Layout() {
   const [connection, setConnection] = useState<ConnectionState>("checking");
   const [detail, setDetail] = useState("Checking API…");
+  const [theme, setTheme] = useState<Theme>(() => getStoredTheme());
 
   useEffect(() => {
     let cancelled = false;
+    let online = false;
+    let steadyTimer: number | undefined;
 
     async function check() {
       try {
@@ -27,14 +31,17 @@ export function Layout() {
         const db = await api.healthDb();
         if (cancelled) return;
         if (db.status === "ok") {
+          online = true;
           setConnection("ok");
           setDetail("API + database online");
         } else {
+          online = false;
           setConnection("bad");
           setDetail(db.detail ?? "Database unhealthy");
         }
       } catch {
         if (!cancelled) {
+          online = false;
           setConnection("bad");
           setDetail("API unreachable");
         }
@@ -42,10 +49,21 @@ export function Layout() {
     }
 
     void check();
-    const timer = window.setInterval(() => void check(), 30000);
+    // Poll fast while booting the local API, then settle to 30s.
+    const bootTimer = window.setInterval(() => {
+      void (async () => {
+        await check();
+        if (online && steadyTimer == null) {
+          window.clearInterval(bootTimer);
+          steadyTimer = window.setInterval(() => void check(), 30000);
+        }
+      })();
+    }, 1500);
+
     return () => {
       cancelled = true;
-      window.clearInterval(timer);
+      window.clearInterval(bootTimer);
+      if (steadyTimer != null) window.clearInterval(steadyTimer);
     };
   }, []);
 
@@ -95,6 +113,22 @@ export function Layout() {
             ))}
           </div>
         </nav>
+        <div className="sidebar-tools">
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={() => setTheme((current) => toggleTheme(current))}
+            aria-label={theme === "dark" ? "Switch to day mode" : "Switch to night mode"}
+            title={theme === "dark" ? "Day mode" : "Night mode"}
+          >
+            {theme === "dark" ? (
+              <Sun aria-hidden size={16} strokeWidth={1.75} />
+            ) : (
+              <Moon aria-hidden size={16} strokeWidth={1.75} />
+            )}
+            <span>{theme === "dark" ? "Day" : "Night"}</span>
+          </button>
+        </div>
         <div className="sidebar-footer">
           <span className="sidebar-footer-ico" aria-hidden>
             <ShieldCheck size={16} strokeWidth={1.75} />

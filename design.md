@@ -54,9 +54,9 @@ Headings (`h1`–`h3`) default to Fraunces, medium weight, **accent** color, lin
 
 ## Color
 
-Light-only for v1. Warm paper neutrals + teal accent (same family as Usora / UrgeLog).
+Warm paper neutrals + teal accent (same family as Usora / UrgeLog). Day (light) and night (dark) modes share the same token names; switch with `data-theme` on `<html>` (`light` | `dark`). Preference persists in `localStorage` under `trackey-theme`.
 
-### Surfaces & text
+### Surfaces & text (day)
 
 | Token | Hex | Role |
 | --- | --- | --- |
@@ -71,7 +71,9 @@ Light-only for v1. Warm paper neutrals + teal accent (same family as Usora / Urg
 | `--border` | `#e5e0d4` | Hairlines |
 | `--border-strong` | `#c9c3b5` | Control borders |
 
-### Accent & status
+Night mode remaps the same tokens to warm ink surfaces (`#161410` canvas, `#f0ebe3` text, brighter teal accent `#5ea39b`). See `ui/src/styles/tokens.css`.
+
+### Accent & status (day)
 
 | Token | Hex |
 | --- | --- |

@@ -24,11 +24,14 @@ cd ui && npm install && npm run dev
 
 # Desktop (Tauri) — starts API + native window
 cd ui && npm install && npm run desktop:dev
+
+# Install / refresh the macOS app in /Applications (clean DB)
+./scripts/install-desktop.sh
 ```
 
 - API docs: http://127.0.0.1:8000/docs  
 - UI: http://127.0.0.1:5173  
-- Desktop: `npm run desktop:dev` from `ui/` (requires Rust + Xcode CLT on macOS)  
+- Desktop app: open **Trackey** from Spotlight / Applications (auto-starts local API)  
 - Design system: [`design.md`](design.md)  
 - Postman: [`postman/Trackey.postman_collection.json`](postman/Trackey.postman_collection.json)  
 - Logo prompt (for Grok / image tools): [`docs/logo-prompt.md`](docs/logo-prompt.md)
