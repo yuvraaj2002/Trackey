@@ -19,14 +19,19 @@ uv run python scripts/seed_dev.py --reset
 # API
 uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
-# UI
+# UI (browser)
 cd ui && npm install && npm run dev
+
+# Desktop (Tauri) — starts API + native window
+cd ui && npm install && npm run desktop:dev
 ```
 
 - API docs: http://127.0.0.1:8000/docs  
 - UI: http://127.0.0.1:5173  
+- Desktop: `npm run desktop:dev` from `ui/` (requires Rust + Xcode CLT on macOS)  
 - Design system: [`design.md`](design.md)  
-- Postman: [`postman/Trackey.postman_collection.json`](postman/Trackey.postman_collection.json)
+- Postman: [`postman/Trackey.postman_collection.json`](postman/Trackey.postman_collection.json)  
+- Logo prompt (for Grok / image tools): [`docs/logo-prompt.md`](docs/logo-prompt.md)
 
 ### Seed options
 
